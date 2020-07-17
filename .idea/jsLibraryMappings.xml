@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="PROJECT" libraries="{bootstrap, handlebars, jquery-3.2.1, jquery-3.2.1.slim, jquery-3.5.1, mdbootstrap, popper.js}" />
+    <includedPredefinedLibrary name="Node.js Core" />
+  </component>
+</project>
