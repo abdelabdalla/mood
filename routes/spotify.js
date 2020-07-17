@@ -2,8 +2,6 @@ require('dotenv').config();
 var express = require('express');
 var querystring = require('querystring');
 var request = require('request');
-var cors = require('cors');
-var cookieParser = require('cookie-parser');
 var router = express.Router();
 
 const client_id = process.env.CLIENT_ID;
@@ -81,7 +79,7 @@ router.get('/callback', function(req, res) {
 
                 // use the access token to access the Spotify Web API
                 request.get(options, function(error, response, body) {
-                    console.log(access_token);
+                    //console.log(access_token);
                 });
 
                 // we can also pass the token to the browser to make requests from there
@@ -120,7 +118,7 @@ router.get('/refresh_token', function(req, res) {
     request.post(authOptions, function(error, response, body) {
         if (!error && response.statusCode === 200) {
             var access_token = body.access_token;
-            console.log(access_token);
+            //console.log(access_token);
             res.send({
                 'access_token': access_token
             });
