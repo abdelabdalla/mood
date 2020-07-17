@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var querystring = require('querystring');
 var request = require('request');
@@ -5,11 +6,9 @@ var cors = require('cors');
 var cookieParser = require('cookie-parser');
 var router = express.Router();
 
-const client_id = '5138f34292b24bc68db2a12db0330bcc';
-const client_secret = 'a9f1b9228ab042af9d4a3e2facf537c7';
-//const redirect_uri = 'https://musical-mood.herokuapp.com/spotify/callback';
-//const redirect_uri = 'http://192.168.0.109:3000/spotify/callback';
-const redirect_uri = 'http://localhost:3000/spotify/callback';
+const client_id = process.env.CLIENT_ID;
+const client_secret = process.env.CLIENT_SECRET;
+const redirect_uri = process.env.REDIRECT_URI;
 
 const generateRandomString = function (length) {
     var text = '';
