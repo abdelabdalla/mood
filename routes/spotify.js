@@ -22,11 +22,7 @@ const generateRandomString = function (length) {
 
 const stateKey = 'spotify_auth_state';
 
-router.get('/token', function (req, res) {
-    console.log(token);
-    res.send(token);
-});
-
+//Router for initial login
 router.get('/login', function(req, res) {
 
     var state = generateRandomString(16);
@@ -43,6 +39,7 @@ router.get('/login', function(req, res) {
         }));
 });
 
+//Router for Spotify API callback
 router.get('/callback', function(req, res) {
 
     var code = req.query.code || null;
@@ -103,6 +100,7 @@ router.get('/callback', function(req, res) {
     }
 });
 
+//Router to refresh Spotify API user access token
 router.get('/refresh_token', function(req, res) {
 
     // requesting access token from refresh token
