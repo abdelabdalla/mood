@@ -4,6 +4,7 @@ var math = require('mathjs');
 var router = express.Router();
 
 /* TODO:
+        * Bug where data doesn't always show up and even crashes sometimes
         * Link social buttons on homepage to correct sites
         * Add section to explain parameters and how they're calculated
         * Finish design of results page
@@ -19,6 +20,7 @@ var router = express.Router();
         * Ads!
         * Proper error handling
         * General design improvements to make it cleaner and more responsive
+        * Remove reliance on hashparams in callback redirect
  */
 
 //Serve Homepage
