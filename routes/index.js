@@ -2,6 +2,7 @@ var express = require('express');
 var request = require('request');
 var math = require('mathjs');
 var mongo = require('mongodb').MongoClient;
+var fs = require('fs');
 var router = express.Router();
 
 /* TODO:
@@ -99,7 +100,11 @@ router.get('/data', function (req, res) {
         if (error) {console.error(error)};
         var features = JSON.parse(body);
         //Split medium and short term features
-        console.log(body);
+
+        fs.writeFile('logging.txt', body, function (err) {
+          if (err) return console.log(err);
+          console.log('Data saved');
+        });
         var mediumFeatures = features.audio_features.slice(0,medium_term.items.length);
         var shortFeatures = features.audio_features.slice(medium_term.items.length);
         console.log(mediumFeatures.length + ' medium features fetched');
