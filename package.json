@@ -9,14 +9,15 @@
     "axios": "^0.19.2",
     "bent": "^7.3.7",
     "bootstrap": "^4.5.0",
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "~1.4.5",
     "cookies": "^0.8.0",
     "cors": "^2.8.5",
-    "debug": "~2.6.9",
+    "debug": "~4.1.1",
     "dotenv": "^8.2.0",
-    "express": "~4.16.1",
+    "express": "~4.17.1",
     "mathjs": "^7.1.0",
-    "morgan": "~1.9.1",
+    "mongodb": "^3.5.9",
+    "morgan": "~1.10.0",
     "request": "^2.88.2"
   }
 }

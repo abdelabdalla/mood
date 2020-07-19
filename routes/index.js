@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request');
 var math = require('mathjs');
+var mongo = require('mongodb').MongoClient;
 var router = express.Router();
 
 /* TODO:
@@ -8,7 +9,6 @@ var router = express.Router();
         * Link social buttons on homepage to correct sites
         * Add section to explain parameters and how they're calculated
         * Finish design of results page
-          * Display user's name
           * Update header text to make it sound better
           * Scale graph correctly
           * Disable 'popup' when hovering over bar
@@ -16,7 +16,6 @@ var router = express.Router();
           * Fix sharing button's design
           * Implement 'screenshotting'
           * Figure out if direct sharing to insta/snap stories is possible and integrate solution
-        * User database
         * Ads!
         * Proper error handling
         * General design improvements to make it cleaner and more responsive
@@ -151,10 +150,48 @@ router.get('/data', function (req, res) {
         }
         var diffAvg = mediumAvg.map(function (item, index){return ((shortAvg[index]-item)/Math.abs(item))*100});
 
-        //Concatenate boringness and variety values to array of other params then send data
+        //Concatenate boringness and variety values to array of other params
         diffAvg.push(diffBoringness,diffStd);
-        res.send(diffAvg);
 
+        //Fetch user data
+        var optionsUser = {
+          method: 'GET',
+          url: 'https://api.spotify.com/v1/me',
+          headers: {
+            authorization: 'Bearer ' + access_token,
+            'content-type': 'application/json',
+            accept: 'application/json'
+          }
+        };
+        request(optionsUser, function (error, response, body) {
+          var userData = JSON.parse(body);
+
+          //Get user's first name then send with rest of data
+          var firstName = userData.display_name.split(" ");
+          diffAvg.push(firstName[0]);
+          res.send(diffAvg);
+
+          //Save user data to DB
+          mongo.connect(process.env.MONGOLAB_URI, {useNewUrlParser: true, useUnifiedTopology: true}, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db('mood');
+            var query = {id : userData.id};
+            var obj = {$set : {
+              id : userData.id,
+              country : userData.country,
+              display_name : userData.display_name,
+              email : userData.email,
+              external_urls : userData.external_urls,
+              followers : userData.followers.total,
+              product : userData.product
+            }};
+            dbo.collection('users').updateOne(query, obj,{upsert: true}, function (err, res) {
+              if (err) throw err;
+              console.log(userData.id + ' added');
+              db.close();
+            });
+          });
+        });
       });
     });
   });

@@ -46,8 +46,8 @@
                 <a href="/spotify/login" class="btn btn-success btn-round-lg btn-lg btn-login">Login with Spotify</a>
             </div>
             <div class="fixed-bottom d-flex justify-content-center">
-                    <img class="bottom-buttons" src="images/logo_transparent.png" height="40px">
-                    <img class="bottom-buttons" src="images/insta.png" height="40px">
+                    <img class="bottom-buttons" src="images/logo_transparent.png" alt="lockdown labs" height="40px">
+                    <a href="https://www.instagram.com/lockdownlabs/" target="_blank"><img class="bottom-buttons" src="images/insta.png" alt="instagram" height="40px"></a>
             </div>
         </div>
         <div id="loading">
@@ -109,10 +109,6 @@
             alert('error during auth');
         } else {
             if (access_token) {
-                //get stats
-                headingPlaceholder.innerHTML = headingTemplate({
-                    display_name: 'Abdel'
-                });
 
                 /*statsPlaceholder.innerHTML = statsTemplate({
                     s: '5'
@@ -123,12 +119,17 @@
                     data: {'access_token': access_token}
                 }).done(function (data) {
                     console.log(data);
+
+                    headingPlaceholder.innerHTML = headingTemplate({
+                        display_name: data[7]
+                    });
+
                     var dsColor = window.chartColors[window.chartColors.red];
                     var newDataset = {
                         label: '',
                         backgroundColor: color(window.chartColors.red).alpha(1).rgbString(),
                         borderColor: dsColor,
-                        data: data
+                        data: data.slice(0,6)
                     };
 
                     horizontalBarChartData.datasets.push(newDataset);
@@ -151,7 +152,7 @@
 
     // Data customizer
     window.chartColors = {
-        red: 'rgb(255, 99, 132)',
+        red: 'rgb(217,4,38)',
 
     };
 
@@ -161,7 +162,7 @@
         labels: ['Positivity', 'Danceability', 'Energy', 'Instrumentals', 'Acousticness', 'Boringness', 'Variety'],
         datasets: [{
             label: '',
-            backgroundColor: color(window.chartColors.red).alpha(1).rgbString(),
+            backgroundColor: window.chartColors.red,
             borderColor: window.chartColors.red,
             borderWidth: 1,
             data: [
