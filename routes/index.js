@@ -32,6 +32,8 @@ router.get('/data', function (req, res) {
 
   var access_token = req.query.access_token;
 
+  console.error('Access Token: ' + access_token);
+
   //Fetch medium term top tracks
   var optionsmt = {
     method: 'GET',
@@ -50,10 +52,11 @@ router.get('/data', function (req, res) {
   request(optionsmt, function (error, response, body) {
     var medium_term = JSON.parse(body);
     var idString = medium_term.items[0].id;
+    console.error('First medium ID: ' + idString);
     for(var i = 1; i<medium_term.items.length; i++){
       idString += (',' + medium_term.items[i].id);
     }
-
+    console.error('Number of medium tracks: ' + medium_term.items.length);
     //Fetch short term top tracks
     var optionsst = {
       method: 'GET',
@@ -71,10 +74,11 @@ router.get('/data', function (req, res) {
     };
     request(optionsst, function (error, response, body) {
       var short_term = JSON.parse(body);
+      console.error('First short ID: ' + short_term.items[0].id);
       for(var i = 0; i<short_term.items.length; i++){
         idString += (',' + short_term.items[i].id);
       }
-
+      console.error('Number of short tracks: ' + short_term.items.length);
       //Fetch track features for both short and medium term tracks
       var options = {
         method: 'GET',
@@ -90,11 +94,11 @@ router.get('/data', function (req, res) {
       };
       request(options, function (error, response, body) {
         var features = JSON.parse(body);
-
         //Split medium and short term features
         var mediumFeatures = features.audio_features.slice(0,medium_term.items.length);
         var shortFeatures = features.audio_features.slice(medium_term.items.length);
-
+        console.error(mediumFeatures.length + ' medium features fetched');
+        console.error(shortFeatures.length + ' short features fetched');
         //Sort data for short term tracks
         var shortVals = Array(8).fill().map(() => Array(shortFeatures.length).fill(0));
         var shortBoringness = new Array(shortFeatures.length);
@@ -110,7 +114,7 @@ router.get('/data', function (req, res) {
           shortVals[7][i] = shortFeatures[i].tempo;
           shortBoringness[i] = shortVals[6][i] + shortVals[7][i] + (shortVals[2][i]*100) + (shortVals[1][i]*100);
         }
-
+        console.error('First short boringness: ' + shortBoringness[0]);
         //Sort data for medium term tracks
         var mediumVals = Array(8).fill().map(() => Array(mediumFeatures.length).fill(0));
         var mediumBoringness = new Array(mediumFeatures.length);
@@ -126,7 +130,7 @@ router.get('/data', function (req, res) {
           mediumVals[7][i] = mediumFeatures[i].tempo;
           mediumBoringness[i] = mediumVals[6][i] + mediumVals[7][i] + (mediumVals[2][i]*100) + (mediumVals[1][i]*100);
         }
-
+        console.error('First medium boringness: ' + mediumBoringness[0]);
         //Calculate mean borigness then find differences
         var shortBoringnessAvg = math.mean(shortBoringness);
         var mediumBoringnessAvg = math.mean(mediumBoringness);
@@ -169,8 +173,9 @@ router.get('/data', function (req, res) {
           //Get user's first name then send with rest of data
           var firstName = userData.display_name.split(" ");
           diffAvg.push(firstName[0]);
+          console.error('Pre-sending');
           res.send(diffAvg);
-
+          console.error('Data sent');
           //Save user data to DB
           mongo.connect(process.env.MONGOLAB_URI, {useNewUrlParser: true, useUnifiedTopology: true}, function (err, db) {
             if (err) throw err;
