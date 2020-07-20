@@ -15,7 +15,7 @@ var router = express.Router();
           * Disable 'popup' when hovering over bar
           * Sort out margins
           * Fix sharing button's design
-          * Implement 'screenshotting'
+          * Allow user to edit their name
           * Figure out if direct sharing to insta/snap stories is possible and integrate solution
         * Ads!
         * Proper error handling
@@ -191,23 +191,32 @@ router.get('/data', function (req, res) {
           //Save user data to DB
           ///*
           mongo.connect(process.env.MONGOLAB_URI, {useNewUrlParser: true, useUnifiedTopology: true}, function (err, db) {
-            if (err) throw err;
-            var dbo = db.db('mood');
-            var query = {id : userData.id};
-            var obj = {$set : {
-              id : userData.id,
-              country : userData.country,
-              display_name : userData.display_name,
-              email : userData.email,
-              external_urls : userData.external_urls,
-              followers : userData.followers.total,
-              product : userData.product
-            }};
-            dbo.collection('users').updateOne(query, obj,{upsert: true}, function (err, res) {
-              if (err) throw err;
-              //console.log(userData.id + ' added');
-              db.close();
-            });
+            if (err) {
+              console.error(err);
+            } else {
+              var dbo = db.db('mood');
+              var query = {id: userData.id};
+              var obj = {
+                $set: {
+                  id: userData.id,
+                  country: userData.country,
+                  display_name: userData.display_name,
+                  email: userData.email,
+                  external_urls: userData.external_urls,
+                  followers: userData.followers.total,
+                  product: userData.product
+                }
+              };
+              dbo.collection('users').updateOne(query, obj, {upsert: true}, function (err, res) {
+                if (err) {
+                  console.error(err);
+                  db.close();
+                } else {
+                  //console.log(userData.id + ' added');
+                  db.close();
+                }
+              });
+            }
           });
         //*/
         });

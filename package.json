@@ -15,6 +15,8 @@
     "debug": "~4.1.1",
     "dotenv": "^8.2.0",
     "express": "~4.17.1",
+    "html2canvas": "^1.0.0-rc.5",
+    "https-localhost": "^4.6.1",
     "mathjs": "^7.1.0",
     "mongodb": "^3.5.9",
     "morgan": "~1.10.0",

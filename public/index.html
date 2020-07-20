@@ -38,7 +38,7 @@
     <script data-ad-client="ca-pub-6965562344219456" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div id="mainpage" class="container">
         <div id="login">
             <h1 class="sticky-top title">How has my music changed during lockdown?</h1>
             <div class="text-center">
@@ -46,7 +46,7 @@
                 <a href="/spotify/login" class="btn btn-success btn-round-lg btn-lg btn-login">Login with Spotify</a>
             </div>
             <div class="fixed-bottom d-flex justify-content-center">
-                    <img class="bottom-buttons" src="images/logo_transparent.png" alt="lockdown labs" height="40px">
+                    <img class="bottom-buttons" onclick="javascript:copyImg()" src="images/logo_transparent.png" alt="lockdown labs" height="40px">
                     <a href="https://www.instagram.com/lockdownlabs/" target="_blank"><img class="bottom-buttons" src="images/insta.png" alt="instagram" height="40px"></a>
             </div>
         </div>
@@ -61,11 +61,12 @@
                     <canvas id="canvas"></canvas>
                 </div>
             </div>
-            <a class="btn btn-default" id="share-insta">Share on Instagram</a>
+            <!--href="instagram-stories://share"-->
+            <a class="btn btn-default" id="share-insta" >Share on Instagram</a>
         </div>
     </div>
     <script id="heading-template" type="text/x-handlebars-template">
-        <h2>{{display_name}}, here are your results:</h2>
+        <h2>{{display_name}}, here's how your musical mood has changed:</h2>
     </script>
     <!--<script id="stats-template" type="text/x-handlebars-template">
         <p>{{s}}Stats here</p>
@@ -78,6 +79,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+<script src="html2canvas.min.js"></script>
 
 <script>
     (function () {
@@ -104,6 +106,8 @@
         var access_token = params.access_token,
             refresh_token = params.refresh_token,
             error = params.error;
+
+        var imgUri = '/images/favicon.png';
 
         if (error) {
             alert('error during auth');
@@ -145,7 +149,16 @@
                 $('#results').hide();
             }
             document.getElementById('share-insta').addEventListener('click', function () {
-
+                console.log(document.getElementById('share-insta').getAttribute('href'));
+                if(document.getElementById('share-insta').getAttribute('href') == null) {
+                    html2canvas(document.getElementById('mainpage')).then(function (canvas) {
+                        var img = canvas.toDataURL("image/png");
+                        var shareButton = document.getElementById('share-insta');
+                        shareButton.setAttribute('href', img);
+                        //console.log('Screenshot taken');
+                        document.getElementById('share-insta').click();
+                    });
+                }
             }, false);
         }
     })();
@@ -205,6 +218,7 @@
         horizontalBarChartData.datasets.pop();
         //window.myHorizontalBar.update();
     };
+
 </script>
 </body>
 </html>
