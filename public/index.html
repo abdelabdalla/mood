@@ -7,24 +7,23 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik&display=swap">
     <style type="text/css">
         body {
             font-family: Rubik,sans-serif;
-            background: #091D48 !important;
+            background: #091d48 !important;
         }
         .title{
             margin-top: 50px;
             //margin-bottom: 50px;
-            color: #FDFCE5;
+            color: #fdfce5;
             font-weight: bold;
         }
         .heading{
             margin-top: 25px;
         //margin-bottom: 25px;
-            color: #FDFCE5;
+            color: #fdfce5;
         }
         .text-colour{
             color: #fefefe;
@@ -40,10 +39,10 @@
             border-radius: 23px;
         }
         .btn-share{
-            background-color: #B97327 !important;
+            background-color: #CF263F !important;
             color: #fefefe !important;
             margin-top: 30px;
-            margin-bottom: 60px;
+            margin-bottom: 30px;
             border-radius: 23px;
         }
         .footer {
@@ -94,8 +93,9 @@
                 </div>
             </div>
             <div class="text-center">
-            <!--href="instagram-stories://share"-->
-            <a class="btn btn-warning btn-share" id="share-insta" >Save results</a>
+                <div id="stats"></div>
+                <!--href="instagram-stories://share"-->
+                <a class="btn btn-lg btn-error btn-share" id="share-insta" >Save results</a>
                 <a hidden id="mystery-button">You shouldn't be able to see me</a>
             </div>
         </div>
@@ -111,6 +111,16 @@
     <script id="heading-template" type="text/x-handlebars-template">
         <h3 class="heading">{{display_name}}, here's how your musical mood has changed:</h3>
     </script>
+
+    <script id="stats-template" type="text/x-handlebars-template">
+        <p class="text-colour" style="font-size: large">{{positive}} positive</p>
+        <p class="text-colour" style="font-size: large">{{dance}} danceable</p>
+        <p class="text-colour" style="font-size: large">{{energy}} energetic</p>
+        <p class="text-colour" style="font-size: large">{{vocal}} vocals</p>
+        <p class="text-colour" style="font-size: large">{{acoustic}} acoustic</p>
+        <p class="text-colour" style="font-size: large">{{boring}} boring</p>
+        <p class="text-colour" style="font-size: large">{{variety}} variety</p>
+    </script>
     <!--<script id="stats-template" type="text/x-handlebars-template">
         <p>{{s}}Stats here</p>
     </script>-->
@@ -121,7 +131,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>-->
 <script src="Chart.js"></script>
 <script src="html2canvas.min.js"></script>
 
@@ -141,9 +150,9 @@
             headingTemplate = Handlebars.compile(headingSource),
             headingPlaceholder = document.getElementById('heading');
 
-        /*var statsSource = document.getElementById('stats-template').innerHTML,
+        var statsSource = document.getElementById('stats-template').innerHTML,
             statsTemplate = Handlebars.compile(statsSource),
-            statsPlaceholder = document.getElementById('stats');*/
+            statsPlaceholder = document.getElementById('stats');
 
         var params = getHashParams();
 
@@ -151,14 +160,35 @@
             refresh_token = params.refresh_token,
             error = params.error;
 
+        function quantify(val) {
+
+            switch (true) {
+                case val === 0:
+                    return 'Equally';
+                case val <= -70:
+                    return 'Significantly less';
+                case val > -70 && val <= -40:
+                    return 'Less';
+                case val > -40 && val <= -5:
+                    return 'Slightly less';
+                case val > -5 && val < 5:
+                    return 'Almost equally';
+                case val >= 5 && val < 40:
+                    return 'Slightly more';
+                case val >= 40 && val < 70:
+                    return 'More';
+                case val >= 70:
+                    return 'Significantly more';
+                default:
+                    return 'Something broke lol';
+            }
+            
+        }
+
         if (error) {
             alert('error during auth');
         } else {
             if (access_token) {
-
-                /*statsPlaceholder.innerHTML = statsTemplate({
-                    s: '5'
-                });*/
 
                 $.ajax({
                     url: '/data',
@@ -172,6 +202,15 @@
                     } else {
                         headingPlaceholder.innerHTML = headingTemplate({
                             display_name: data[7]
+                        });
+                        statsPlaceholder.innerHTML = statsTemplate({
+                            positive: quantify(data[0]),
+                            dance: quantify(data[1]),
+                            energy: quantify(data[2]),
+                            vocal: quantify(data[3]),
+                            acoustic: quantify(data[4]),
+                            boring: quantify(data[5]),
+                            variety: quantify(data[6]),
                         });
 
                         var dsColor = window.chartColors[window.chartColors.red];
@@ -192,7 +231,6 @@
                         $('#login').hide();
                         $('#loading').hide();
                         $('#results').show();
-                        //$('#footer').show();
                     }
                 });
 
@@ -200,20 +238,10 @@
                 $('#login').show();
                 $('#loading').hide();
                 $('#results').hide();
-                //$('#footer').show();
             }
             document.getElementById('share-insta').addEventListener('click', function () {
-                /*if(document.getElementById('share-insta').getAttribute('href') == null) {
-                    html2canvas(document.getElementById('mainpage')).then(function (canvas) {
-                        var img = canvas.toDataURL("image/png");
-                        var shareButton = document.getElementById('share-insta');
-                        shareButton.setAttribute('href', img);
-                        //console.log('Screenshot taken');
-                        document.getElementById('share-insta').click();
-                    });
-                }
-                */
-
+                window.scrollTo(0,0);
+                document.getElementById('share-insta').innerHTML = 'follow us on @lockdownlabs';
                 html2canvas(document.getElementById('mainpage')).then(function (canvas) {
                     var shareButton = document.getElementById('mystery-button');
                     var img = canvas.toDataURL("image/png");
@@ -223,6 +251,7 @@
                         shareButton.click();
                     }
                 });
+                document.getElementById('share-insta').innerHTML = 'Save results';
             }, false);
         }
     })();

@@ -2,13 +2,11 @@ var express = require('express');
 var request = require('request');
 var math = require('mathjs');
 var mongo = require('mongodb').MongoClient;
-var fs = require('fs');
-var querystring = require('querystring');
 var router = express.Router();
 
 /* TODO:
         * Finish design of results page
-          * Text under graph
+          * Adaptive graph scales
           * Allow user to edit their name
           * Figure out if direct sharing to insta/snap stories is possible and integrate solution
         * Ads!
@@ -105,10 +103,10 @@ router.get('/data', function (req, res) {
 
           //Split medium and short term features and filter any null returns
           var mediumFeatures = features.audio_features.slice(0, medium_term.items.length).filter(function (el) {
-            return el != null;
+            return el !== null;
           });
           var shortFeatures = features.audio_features.slice(medium_term.items.length).filter(function (el) {
-            return el != null;
+            return el !== null;
           });
 
           ////console.log(mediumFeatures.length + ' medium features fetched');
