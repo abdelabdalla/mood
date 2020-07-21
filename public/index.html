@@ -112,17 +112,17 @@
     </footer>
 
     <script id="heading-template" type="text/x-handlebars-template">
-        <h3 class="heading">{{display_name}}, here's how your musical has changed over lockdown:</h3>
+        <h3 class="heading">{{display_name}}, here's how your music has changed over lockdown:</h3>
     </script>
 
     <script id="stats-template" type="text/x-handlebars-template">
-        <p class="p-stats text-colour" style="font-size: large">Your music has become {{positive}} positive,</p>
-        <p class="p-stats text-colour" style="font-size: large">{{dance}} danceable,</p>
+        <p class="p-stats text-colour" style="font-size: large">Your music has become {{positive}} positive, {{dance}} danceable, {{energy}} energetic, {{vocal}} vocal, {{acoustic}} acoustic, {{boring}} boring and has {{variety}} variety.</p>
+        <!--<p class="p-stats text-colour" style="font-size: large">{{dance}} danceable,</p>
         <p class="p-stats text-colour" style="font-size: large">{{energy}} energetic,</p>
         <p class="p-stats text-colour" style="font-size: large">{{vocal}} vocals,</p>
         <p class="p-stats text-colour" style="font-size: large">{{acoustic}} acoustic,</p>
         <p class="p-stats text-colour" style="font-size: large">{{boring}} boring,</p>
-        <p class="p-stats text-colour" style="font-size: large">{{variety}} variety</p>
+        <p class="p-stats text-colour" style="font-size: large">has {{variety}} variety</p>-->
     </script>
     <!--<script id="stats-template" type="text/x-handlebars-template">
         <p>{{s}}Stats here</p>
@@ -162,6 +162,11 @@
         var access_token = params.access_token,
             refresh_token = params.refresh_token,
             error = params.error;
+
+        window.chartColors = {
+            red: 'rgb(207,38,63)',
+            white: 'rgb(220,220,220)'
+        };
 
         function quantify(val) {
 
@@ -204,7 +209,7 @@
                         $('#results').hide();
                     } else {
                         headingPlaceholder.innerHTML = headingTemplate({
-                            display_name: data[7]
+                            display_name: data[8]
                         });
                         statsPlaceholder.innerHTML = statsTemplate({
                             positive: quantify(data[0]),
@@ -216,17 +221,69 @@
                             variety: quantify(data[6]),
                         });
 
-                        var dsColor = window.chartColors[window.chartColors.red];
-                        var newDataset = {
-                            label: '',
-                            backgroundColor: color(window.chartColors.red).alpha(1).rgbString(),
-                            borderColor: dsColor,
-                            data: data.slice(0, 7)
+                        var horizontalBarChartData = {
+                            labels: ['Positivity', 'Danceability', 'Energy', 'Vocals', 'Acousticness', 'Boringness', 'Variety'],
+                            datasets: [{
+                                label: '',
+                                backgroundColor: window.chartColors.red,
+                                borderColor: window.chartColors.red,
+                                borderWidth: 1,
+                                data: data.slice(0, 7)
+                            }]
                         };
+                        Chart.defaults.global.defaultFontColor = window.chartColors.white;
+                        Chart.defaults.global.defaultFontSize = 14
+                        var ctx = document.getElementById('canvas').getContext('2d');
+                        window.myHorizontalBar = new Chart(ctx, {
+                            type: 'horizontalBar',
+                            data: horizontalBarChartData,
+                            options: {
+                                scales: {
+                                    xAxes: [{
+                                        gridLines: {
+                                            color: window.chartColors.white,
+                                            zeroLineColor: window.chartColors.white
+                                        },
+                                        ticks: {
+                                            min: -data[7],
+                                            max: data[7]
+                                        }}],
+                                    yAxes: [{
+                                        gridLines: {
+                                            color: window.chartColors.white,
+                                            zeroLineColor: window.chartColors.white
+                                        }
+                                    }],
+                                },
+                                layout: {
+                                    padding: {
+                                        left: 0,
+                                        right: 0,
+                                        top: 0,
+                                        bottom: 0
+                                    }
+                                },
+                                elements: {
+                                    rectangle: {
+                                        borderWidth: 2,
+                                    }
+                                },
+                                responsive: true,
+                                aspectRatio: 1.75,
+                                legend: {
+                                    display: false
+                                },
+                                title: {
+                                    display: false
+                                },
+                                tooltips: {
+                                    enabled: false
+                                }
+                            }
+                        });
 
-                        horizontalBarChartData.datasets.push(newDataset);
                         try {
-                            window.myHorizontalBar.update();//TODO bug where data doesn't display likely originates here
+                            window.myHorizontalBar.update();
                         } catch (e) {
                             console.error('The stupid problem just happened');
                             location.reload();
@@ -258,90 +315,6 @@
             }, false);
         }
     })();
-
-    // Data customizer
-    window.chartColors = {
-        red: 'rgb(207,38,63)',
-        white: 'rgb(220,220,220)'
-    };
-
-    // Bar chart
-    var color = Chart.helpers.color;
-    var horizontalBarChartData = {
-        labels: ['Positivity', 'Danceability', 'Energy', 'Vocals', 'Acousticness', 'Boringness', 'Variety'],
-        datasets: [{
-            label: '',
-            backgroundColor: window.chartColors.red,
-            borderColor: window.chartColors.red,
-            borderWidth: 1,
-            data: [
-                5,
-                5,
-                55,
-                44,
-                69,
-                90,
-                -18
-            ]
-        }]
-
-    };
-
-    window.onload = function() {
-        Chart.defaults.global.defaultFontColor = window.chartColors.white;
-        Chart.defaults.global.defaultFontSize = 14
-        var ctx = document.getElementById('canvas').getContext('2d');
-        window.myHorizontalBar = new Chart(ctx, {
-            type: 'horizontalBar',
-            data: horizontalBarChartData,
-            options: {
-                scales: {
-                    xAxes: [{
-                    gridLines: {
-                        color: window.chartColors.white,
-                        zeroLineColor: window.chartColors.white
-                    },
-                        ticks: {
-                            min: -100,
-                            max: 100
-                        }}],
-                    yAxes: [{
-                        gridLines: {
-                            color: window.chartColors.white,
-                            zeroLineColor: window.chartColors.white
-                        }
-                    }],
-                },
-                layout: {
-                    padding: {
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0
-                    }
-                },
-                elements: {
-                    rectangle: {
-                        borderWidth: 2,
-                    }
-                },
-                responsive: true,
-                aspectRatio: 1.75,
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: false
-                },
-                tooltips: {
-                    enabled: false
-                }
-            }
-        });
-        horizontalBarChartData.datasets.pop();
-        //window.myHorizontalBar.update();
-    };
-
 </script>
 </body>
 </html>
