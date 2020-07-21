@@ -8,24 +8,50 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik&display=swap">
     <style type="text/css">
         body {
             font-family: Rubik,sans-serif;
-            background: #fdfce5 !important;
+            background: #091D48 !important;
         }
         .title{
             margin-top: 50px;
-            margin-bottom: 80px;
+            //margin-bottom: 50px;
+            color: #FDFCE5;
+            font-weight: bold;
+        }
+        .heading{
+            margin-top: 25px;
+        //margin-bottom: 25px;
+            color: #FDFCE5;
+        }
+        .text-colour{
+            color: #fefefe;
         }
         .bottom-buttons{
             margin: 20px;
         }
-        .btn-round-lg{
+        .btn-login{
+            background-color: #1DB954 !important;
+            color: #ffffff !important;
+            margin-top: 60px;
+            margin-bottom: 60px;
             border-radius: 23px;
         }
-        .btn-login{
-            background-color: #1DB954;
+        .btn-share{
+            background-color: #B97327 !important;
+            color: #fefefe !important;
+            margin-top: 30px;
+            margin-bottom: 60px;
+            border-radius: 23px;
+        }
+        .footer {
+            /*position: absolute;
+            bottom: 0;*/
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
         }
         #login, #loading, #results {
             display: none;
@@ -38,17 +64,23 @@
     <script data-ad-client="ca-pub-6965562344219456" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <body>
-    <div id="mainpage" class="container">
+    <div id="mainpage" class="container-fluid" style="background: #091D48 !important;">
         <div id="login">
-            <h1 class="sticky-top title">How has my music changed during lockdown?</h1>
             <div class="text-center">
-                <p style="color: darkgrey">Find out if your music tastes have changed in the past few months. Simply connect your Spotify account below and we'll do the rest of the work.</p>
-                <a href="/spotify/login" class="btn btn-success btn-round-lg btn-lg btn-login">Login with Spotify</a>
+                <h1 class="title">How has my music changed during lockdown?</h1>
+                <a href="/spotify/login" class="btn btn-success btn-lg btn-login">Login with Spotify</a>
             </div>
-            <div class="fixed-bottom d-flex justify-content-center">
-                    <img class="bottom-buttons" onclick="javascript:copyImg()" src="images/logo_transparent.png" alt="lockdown labs" height="40px">
-                    <a href="https://www.instagram.com/lockdownlabs/" target="_blank"><img class="bottom-buttons" src="images/insta.png" alt="instagram" height="40px"></a>
-            </div>
+                <p class="text-colour">We analyse your most played songs from the past few months to see how your music has changed. Seven aspects of your music are tracked:</p>
+                <ul class="text-colour">
+                    <li>Positivity: Shows if your music has become more or less positive</li>
+                    <li>Danceability: Shows if your music taste has become more suited to dancing</li>
+                    <li>Energy: Shows how much faster and louder the music has become</li>
+                    <li>Vocals: Shows how the amount of vocals in your songs has changed</li>
+                    <li>Acousticness: Shows how acoustic your music is</li>
+                    <li>Boringness: Shows how boring your music has become. This is based on tempo, loudness, and energy</li>
+                    <li>Variety: Shows if your music has become more or less varied</li>
+                </ul>
+            <p class="text-colour">Simply connect your Spotify account below and we'll do the rest of the work.</p>
         </div>
         <div id="loading">
             <h1>Hello There!</h1>
@@ -61,12 +93,23 @@
                     <canvas id="canvas"></canvas>
                 </div>
             </div>
+            <div class="text-center">
             <!--href="instagram-stories://share"-->
-            <a class="btn btn-default" id="share-insta" >Share on Instagram</a>
+            <a class="btn btn-warning btn-share" id="share-insta" >Save results</a>
+                <a hidden id="mystery-button">You shouldn't be able to see me</a>
+            </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="container d-flex justify-content-center">
+            <img class="bottom-buttons" src="images/logo_transparent.png" alt="lockdown labs" height="40px">
+            <a href="https://www.instagram.com/lockdownlabs/" target="_blank"><img class="bottom-buttons" src="images/insta.png" alt="instagram" height="40px"></a>
+        </div>
+    </footer>
+
     <script id="heading-template" type="text/x-handlebars-template">
-        <h2>{{display_name}}, here's how your musical mood has changed:</h2>
+        <h3 class="heading">{{display_name}}, here's how your musical mood has changed:</h3>
     </script>
     <!--<script id="stats-template" type="text/x-handlebars-template">
         <p>{{s}}Stats here</p>
@@ -78,7 +121,8 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>-->
+<script src="Chart.js"></script>
 <script src="html2canvas.min.js"></script>
 
 <script>
@@ -107,8 +151,6 @@
             refresh_token = params.refresh_token,
             error = params.error;
 
-        var imgUri = '/images/favicon.png';
-
         if (error) {
             alert('error during auth');
         } else {
@@ -123,34 +165,45 @@
                     data: {'access_token': access_token}
                 }).done(function (data) {
                     console.log(data);
+                    if (data[0] === 1000) {
+                        $('#login').show();
+                        $('#loading').hide();
+                        $('#results').hide();
+                    } else {
+                        headingPlaceholder.innerHTML = headingTemplate({
+                            display_name: data[7]
+                        });
 
-                    headingPlaceholder.innerHTML = headingTemplate({
-                        display_name: data[7]
-                    });
+                        var dsColor = window.chartColors[window.chartColors.red];
+                        var newDataset = {
+                            label: '',
+                            backgroundColor: color(window.chartColors.red).alpha(1).rgbString(),
+                            borderColor: dsColor,
+                            data: data.slice(0, 7)
+                        };
 
-                    var dsColor = window.chartColors[window.chartColors.red];
-                    var newDataset = {
-                        label: '',
-                        backgroundColor: color(window.chartColors.red).alpha(1).rgbString(),
-                        borderColor: dsColor,
-                        data: data.slice(0,6)
-                    };
-
-                    horizontalBarChartData.datasets.push(newDataset);
-                    window.myHorizontalBar.update();
-                    $('#login').hide();
-                    $('#loading').hide();
-                    $('#results').show();
+                        horizontalBarChartData.datasets.push(newDataset);
+                        try {
+                            window.myHorizontalBar.update();//TODO bug where data doesn't display likely originates here
+                        } catch (e) {
+                            console.error('The stupid problem just happened');
+                            location.reload();
+                        }
+                        $('#login').hide();
+                        $('#loading').hide();
+                        $('#results').show();
+                        //$('#footer').show();
+                    }
                 });
 
             } else {
                 $('#login').show();
                 $('#loading').hide();
                 $('#results').hide();
+                //$('#footer').show();
             }
             document.getElementById('share-insta').addEventListener('click', function () {
-                console.log(document.getElementById('share-insta').getAttribute('href'));
-                if(document.getElementById('share-insta').getAttribute('href') == null) {
+                /*if(document.getElementById('share-insta').getAttribute('href') == null) {
                     html2canvas(document.getElementById('mainpage')).then(function (canvas) {
                         var img = canvas.toDataURL("image/png");
                         var shareButton = document.getElementById('share-insta');
@@ -159,20 +212,31 @@
                         document.getElementById('share-insta').click();
                     });
                 }
+                */
+
+                html2canvas(document.getElementById('mainpage')).then(function (canvas) {
+                    var shareButton = document.getElementById('mystery-button');
+                    var img = canvas.toDataURL("image/png");
+                    shareButton.setAttribute('href', img);
+                    var conf = confirm('Your results will now open as an image you can download by holding down on it');
+                    if (conf) {
+                        shareButton.click();
+                    }
+                });
             }, false);
         }
     })();
 
     // Data customizer
     window.chartColors = {
-        red: 'rgb(217,4,38)',
-
+        red: 'rgb(207,38,63)',
+        white: 'rgb(200,200,200)'
     };
 
     // Bar chart
     var color = Chart.helpers.color;
     var horizontalBarChartData = {
-        labels: ['Positivity', 'Danceability', 'Energy', 'Instrumentals', 'Acousticness', 'Boringness', 'Variety'],
+        labels: ['Positivity', 'Danceability', 'Energy', 'Vocals', 'Acousticness', 'Boringness', 'Variety'],
         datasets: [{
             label: '',
             backgroundColor: window.chartColors.red,
@@ -192,26 +256,53 @@
     };
 
     window.onload = function() {
+        Chart.defaults.global.defaultFontColor = window.chartColors.white;
+        Chart.defaults.global.defaultFontSize = 14
         var ctx = document.getElementById('canvas').getContext('2d');
         window.myHorizontalBar = new Chart(ctx, {
             type: 'horizontalBar',
             data: horizontalBarChartData,
             options: {
-                // Elements options apply to all of the options unless overridden in a dataset
-                // In this case, we are setting the border of each horizontal bar to be 2px wide
+                scales: {
+                    xAxes: [{
+                    gridLines: {
+                        color: window.chartColors.white,
+                        zeroLineColor: window.chartColors.white
+                    },
+                        ticks: {
+                            min: -100,
+                            max: 100
+                        }}],
+                    yAxes: [{
+                        gridLines: {
+                            color: window.chartColors.white,
+                            zeroLineColor: window.chartColors.white
+                        }
+                    }],
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0
+                    }
+                },
                 elements: {
                     rectangle: {
                         borderWidth: 2,
                     }
                 },
                 responsive: true,
+                aspectRatio: 1.5,
                 legend: {
-                    display: false,
-                    position: 'right',
+                    display: false
                 },
                 title: {
-                    display: false,
-                    text: 'Bootstrap bar chart horizontal'
+                    display: false
+                },
+                tooltips: {
+                    enabled: false
                 }
             }
         });
