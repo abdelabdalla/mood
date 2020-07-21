@@ -26,7 +26,7 @@
             color: #fdfce5;
         }
         .text-colour{
-            color: #fefefe;
+            color: #dcdcdc;
         }
         .bottom-buttons{
             margin: 20px;
@@ -37,6 +37,9 @@
             margin-top: 60px;
             margin-bottom: 60px;
             border-radius: 23px;
+        }
+        .p-stats {
+            margin: 0em;
         }
         .btn-share{
             background-color: #CF263F !important;
@@ -92,8 +95,8 @@
                     <canvas id="canvas"></canvas>
                 </div>
             </div>
+            <div id="stats"></div>
             <div class="text-center">
-                <div id="stats"></div>
                 <!--href="instagram-stories://share"-->
                 <a class="btn btn-lg btn-error btn-share" id="share-insta" >Save results</a>
                 <a hidden id="mystery-button">You shouldn't be able to see me</a>
@@ -109,17 +112,17 @@
     </footer>
 
     <script id="heading-template" type="text/x-handlebars-template">
-        <h3 class="heading">{{display_name}}, here's how your musical mood has changed:</h3>
+        <h3 class="heading">{{display_name}}, here's how your musical has changed over lockdown:</h3>
     </script>
 
     <script id="stats-template" type="text/x-handlebars-template">
-        <p class="text-colour" style="font-size: large">{{positive}} positive</p>
-        <p class="text-colour" style="font-size: large">{{dance}} danceable</p>
-        <p class="text-colour" style="font-size: large">{{energy}} energetic</p>
-        <p class="text-colour" style="font-size: large">{{vocal}} vocals</p>
-        <p class="text-colour" style="font-size: large">{{acoustic}} acoustic</p>
-        <p class="text-colour" style="font-size: large">{{boring}} boring</p>
-        <p class="text-colour" style="font-size: large">{{variety}} variety</p>
+        <p class="p-stats text-colour" style="font-size: large">Your music has become {{positive}} positive,</p>
+        <p class="p-stats text-colour" style="font-size: large">{{dance}} danceable,</p>
+        <p class="p-stats text-colour" style="font-size: large">{{energy}} energetic,</p>
+        <p class="p-stats text-colour" style="font-size: large">{{vocal}} vocals,</p>
+        <p class="p-stats text-colour" style="font-size: large">{{acoustic}} acoustic,</p>
+        <p class="p-stats text-colour" style="font-size: large">{{boring}} boring,</p>
+        <p class="p-stats text-colour" style="font-size: large">{{variety}} variety</p>
     </script>
     <!--<script id="stats-template" type="text/x-handlebars-template">
         <p>{{s}}Stats here</p>
@@ -164,23 +167,23 @@
 
             switch (true) {
                 case val === 0:
-                    return 'Equally';
+                    return 'equally';
                 case val <= -70:
-                    return 'Significantly less';
+                    return 'significantly less';
                 case val > -70 && val <= -40:
-                    return 'Less';
+                    return 'less';
                 case val > -40 && val <= -5:
-                    return 'Slightly less';
+                    return 'slightly less';
                 case val > -5 && val < 5:
-                    return 'Almost equally';
+                    return 'similarly';
                 case val >= 5 && val < 40:
-                    return 'Slightly more';
+                    return 'slightly more';
                 case val >= 40 && val < 70:
-                    return 'More';
+                    return 'more';
                 case val >= 70:
-                    return 'Significantly more';
+                    return 'significantly more';
                 default:
-                    return 'Something broke lol';
+                    return 'something broke lol';
             }
             
         }
@@ -259,7 +262,7 @@
     // Data customizer
     window.chartColors = {
         red: 'rgb(207,38,63)',
-        white: 'rgb(200,200,200)'
+        white: 'rgb(220,220,220)'
     };
 
     // Bar chart
@@ -323,7 +326,7 @@
                     }
                 },
                 responsive: true,
-                aspectRatio: 1.5,
+                aspectRatio: 1.75,
                 legend: {
                     display: false
                 },
